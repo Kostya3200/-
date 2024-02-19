@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <!-- Используем библиотеку Leaflet для карты -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    #map {
+      height: 1080px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    // Создаем карту с помощью Leaflet
+    var map = new L.Map('map', {
+      center: [50.3834327082762, 30.60153417918023],
+      zoom: 10,
+      layers: [
+        new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          'subdomains': ['a', 'b', 'c'],
+          'attribution': '© OpenStreetMap contributors'
+        })
+      ]
+    });
+
+    // Добавляем точку с использованием L.geoJSON
+    var pointJson = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "geometry": {
+            "coordinates": [
+              30.509217134066887,
+              50.44740255167636
+            ],
+            "type": "Point"
+          },
+          "properties": {}
+        }
+      ]
+    };
+
+    var pointData = L.geoJSON(pointJson).addTo(map);
+
+    // Добавляем линию (многоугольник) с использованием L.geoJSON
+    var lineJson = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "geometry": {
+            "coordinates": [
+              [30.47682450457154, 50.43195616246072],
+              [30.479722715643078, 50.41155718495236],
+              // ... добавьте остальные координаты здесь ...
+              [30.497987344796428, 50.41516111804978]
+            ],
+            "type": "LineString"
+          },
+          "properties": {}
+        }
+      ]
+    };
+
+    var lineData = L.geoJSON(lineJson).addTo(map);
+
+    // Добавляем полигон с использованием L.geoJSON
+    var polygonJson = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "geometry": {
+            "coordinates": [
+              [
+                [30.52067903891725, 50.42317547877667],
+                [30.52067903891725, 50.400850859026576],
+                [30.560013443410043, 50.400850859026576],
+                [30.560013443410043, 50.42317547877667],
+                [30.52067903891725, 50.42317547877667]
+              ]
+            ],
+            "type": "Polygon"
+          },
+          "properties": {}
+        }
+      ]
+    };
+
+    var polygonData = L.geoJSON(polygonJson).addTo(map);
+
+    // Добавляем переключатель слоев
+    L.control.layers({
+      'Вулиці': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        'subdomains': ['a', 'b', 'c'],
+        'attribution': '© OpenStreetMap contributors'
+      }),
+      'Супутник': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        'attribution': '© Esri'
+      })
+    }, {
+      'Точка': pointData,
+      'Линия': lineData,
+      'Полигон': polygonData
+    }).addTo(map);
+  </script>
+</body>
+</html>
